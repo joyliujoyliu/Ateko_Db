@@ -1,0 +1,7 @@
+Both implementations produced identical results, but they differed significantly in development experience and flexibility.
+
+The ORM aggregation was easier to implement. It required less boilerplate, handled joins and relationships cleanly, and reduced the likelihood of syntax errors. The abstraction layer makes the code more readable and maintainable, especially for developers who are not deeply familiar with SQL. From a productivity perspective, ORM is more user-friendly and integrates naturally with application models.
+
+However, the raw SQL implementation provided greater control. Writing the GROUP BY and SUM queries directly made the aggregation logic explicit and easier to optimize or fine-tune. Raw SQL is preferable in production when performance tuning, complex joins, database-specific features, or query plan optimization are required. It also provides clearer visibility into what is actually executed at the database level.
+
+In summary, ORM improves development speed and readability, while raw SQL offers precision and control. The choice depends on whether development efficiency or fine-grained database optimization is the priority.
