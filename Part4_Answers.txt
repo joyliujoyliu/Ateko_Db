@@ -1,0 +1,35 @@
+1. What happens if 50 users hit your API simultaneously?
+
+If 50 users send requests at the same time, SQLAlchemy will attempt to allocate database connections from the pool. Up to pool_size connections are kept persistently open. If demand exceeds this number, additional temporary connections can be created up to max_overflow.
+
+If total concurrent requests exceed pool_size + max_overflow, new requests must wait until a connection is returned to the pool. If the wait exceeds the configured timeout, the API will raise a connection timeout error.
+
+With pool_pre_ping=True, stale or dropped connections are automatically validated before use, reducing runtime failures under high concurrency.
+
+2. What happens if pool_size = 3?
+
+If pool_size is set to 3, only three persistent database connections are maintained. Under moderate traffic, this can quickly become a bottleneck.
+
+If more than three concurrent database operations occur:
+
+Additional connections are created only if allowed by max_overflow.
+
+Otherwise, requests will queue and wait.
+
+If waiting exceeds the timeout threshold, requests fail.
+
+This configuration may work for low-traffic environments but can severely limit scalability in production.
+
+3. What could happen if no pooling is configured?
+
+Without connection pooling, each request creates and closes a new database connection. This introduces:
+
+Higher latency per request (connection handshake overhead)
+
+Increased CPU and memory usage on the database server
+
+Risk of exhausting the database’s maximum allowed connections
+
+Poor scalability under concurrent traffic
+
+In high-load systems, lack of pooling can significantly degrade performance and even cause database crashes due to connection exhaustion.
