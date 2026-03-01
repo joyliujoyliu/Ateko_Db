@@ -114,36 +114,43 @@ To make your project reproducible, save all installed packages:
 pip freeze > requirements.txt
 ```
 
-## 2. Endpoint Explainations
+## 2. API Endpoint Explanations
 
-## 1. GET /products 
-It will generate a list of product based on price range and active status.
+### 1. GET /products 
+Retrieves a list of products filtered by price range and active status.
+
+**Web Interface Example:**
+
 <img width="3633" height="1593" alt="image" src="https://github.com/user-attachments/assets/14916b0c-18c8-4fcf-843d-8f27a7d64299" />
 
-Once you put the vale and click excuse, it will give you a jason output like
+After entering the filter values and clicking Execute, the API returns a JSON response:
 
 <img width="3597" height="1011" alt="image" src="https://github.com/user-attachments/assets/1865414b-a040-4f05-b6bb-f9a17b096552" />
 
+**Postman Example:**
+You can also copy the request URL:
+```
+http://127.0.0.1:8000/products?min_price=1&max_price=10&active_only=true and paste it to postman git request
+```
+Paste it into Postman as a GET request:
 
-You can also copy the request url http://127.0.0.1:8000/products?min_price=1&max_price=10&active_only=true and paste it to postman git request
 <img width="1746" height="1191" alt="image" src="https://github.com/user-attachments/assets/27270acc-818f-4a8c-88e1-d86e85c2e8d0" />
 
 
-## 2. Offset-Based Pagination
-It gives you a subset of the list based on limit (max number of product to return) and offset (after the number of rows to return)
+### 2. Offset-Based Pagination
+Returns a subset of products using limit (maximum number of products) and offset (starting row index).
 
 <img width="3708" height="1362" alt="image" src="https://github.com/user-attachments/assets/97211c5b-f77a-48e8-b7b3-41c822efa719" />
 
-For eg, if we put 5 for limit and 5 for offset, it gives you 5 item and the first one start from row 6
+Example: limit=5, offset=5 → returns 5 items starting from the 6th row.
+
 <img width="3573" height="1359" alt="image" src="https://github.com/user-attachments/assets/d3a37cbe-20eb-4923-89c4-43789279f035" />
 
 <img width="1707" height="882" alt="image" src="https://github.com/user-attachments/assets/7bcf7e5f-449c-4a02-9306-447e5f9c0048" />
 
 
-## 3. Cursor-Based Pagination
-
-All products after the given created_at.
-If multiple products have the same created_at, pick those with id greater than the cursor’s id.
+### 3. Cursor-Based Pagination
+Fetches all products after a given created_at timestamp. If multiple products share the same timestamp, it selects those with IDs greater than the cursor ID.
 
 <img width="3648" height="1449" alt="image" src="https://github.com/user-attachments/assets/48de05a1-4b44-47f3-870c-399f680f7827" />
 
@@ -151,10 +158,55 @@ If multiple products have the same created_at, pick those with id greater than t
 
 <img width="1689" height="705" alt="image" src="https://github.com/user-attachments/assets/a820d50d-c43f-464b-94d1-bf07cdc50cdc" />
 
-Note: if your dataset is small you can use offset, if it's large and keep going, it's better to use Cursor-Based Pagination
-For eg:
-Offset-based pagination (LIMIT 5 OFFSET 1000) requires skipping all previous rows in the database, which slows down for large datasets.
-Cursor-based pagination uses a stable key (created_at + id) to jump directly to the next rows, no skipping, much faster for large tables.
+**Note:**
+
+* Use offset-based pagination for small datasets.
+
+* Use cursor-based pagination for large, continuously growing datasets.
+
+**Performance Tip:**
+
+* LIMIT 5 OFFSET 1000 (offset-based) skips 1000 rows → slower for large datasets.
+
+* Cursor-based pagination jumps directly using a stable key (created_at + id) → faster and more efficient.
+
+
+### 4. POST /orders
+
+Creates a new order for a customer. Steps include:
+
+1. Validate customer existence.
+
+2. Validate product existence.
+
+3. Check stock availability.
+
+4. Deduct stock if available.
+
+5. Return the order record, including customer ID, order items, and total amount.
+   
+**Web Interface Example:**
+<img width="3756" height="1755" alt="image" src="https://github.com/user-attachments/assets/02a56b80-a901-45f9-b53c-9ec3b27988f5" />
+
+<img width="3510" height="930" alt="image" src="https://github.com/user-attachments/assets/a343b5ef-0423-46f8-81d3-8a30541a1810" />
+
+**Postman Example:**
+
+Switch to POST, paste the URL, and send the request:
+<img width="1719" height="1281" alt="image" src="https://github.com/user-attachments/assets/e9d77148-8ede-4f32-90ad-48cedf57f10e" />
+
+### 5. GET /orders/{order_id}
+Retrieves complete order details, including:
+
+* Order information
+
+* Customer information
+
+* List of order items
+* 
+<img width="3594" height="1491" alt="image" src="https://github.com/user-attachments/assets/6b9f6dfa-80ff-4c39-be0d-d7790e547495" />
+
+<img width="1677" height="840" alt="image" src="https://github.com/user-attachments/assets/aa277aff-6ae7-4c58-b595-6b72b294372e" />
 
 
 
