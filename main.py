@@ -384,53 +384,53 @@ def create_order(data: OrderInput, db: Session = Depends(get_db)):
 #         "total": float(total)
 #     }
 
-# # OMR version
+# #OMR version
 
 
 
-# @app.get("/analytics/top-products/orm")
-# def top_products_orm(db: Session = Depends(get_db)):
+@app.get("/analytics/top-products/orm")
+def top_products_orm(db: Session = Depends(get_db)):
 
-#     results = (
-#         db.query(
-#             Product.id,
-#             Product.name,
-#             func.sum(OrderItem.quantity).label("total_quantity"),
-#             func.sum(OrderItem.quantity * OrderItem.unit_price).label("total_revenue")
-#         )
-#         .join(OrderItem)
-#         .group_by(Product.id)
-#         .order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc())
-#         .limit(5)
-#         .all()
-#     )
+     results = (
+         db.query(
+             Product.id,
+             Product.name,
+             func.sum(OrderItem.quantity).label("total_quantity"),
+             func.sum(OrderItem.quantity * OrderItem.unit_price).label("total_revenue")
+         )
+         .join(OrderItem)
+         .group_by(Product.id)
+         .order_by(func.sum(OrderItem.quantity * OrderItem.unit_price).desc())
+         .limit(5)
+         .all()
+     )
 
-#     return [
-#         {
-#             "product_id": r.id,
-#             "product_name": r.name,
-#             "total_quantity_sold": int(r.total_quantity),
-#             "total_revenue": float(r.total_revenue)
-#         }
-#         for r in results
-#     ]
+     return [
+         {
+             "product_id": r.id,
+             "product_name": r.name,
+             "total_quantity_sold": int(r.total_quantity),
+             "total_revenue": float(r.total_revenue)
+         }
+         for r in results
+     ]
 
-# # raw sql  version
-# @app.get("/analytics/top-products/sql")
-# def top_products_sql(db: Session = Depends(get_db)):
+ # raw sql  version
+@app.get("/analytics/top-products/sql")
+def top_products_sql(db: Session = Depends(get_db)):
 
-#     sql = text("""
-#         SELECT
-#             p.id AS product_id,
-#             p.name AS product_name,
-#             SUM(oi.quantity) AS total_quantity_sold,
-#             SUM(oi.quantity * oi.unit_price) AS total_revenue
-#         FROM order_items oi
-#         JOIN products p ON p.id = oi.product_id
-#         GROUP BY p.id, p.name
-#         ORDER BY total_revenue DESC
-#         LIMIT 5
-#     """)
+     sql = text("""
+         SELECT
+             p.id AS product_id,
+             p.name AS product_name,
+             SUM(oi.quantity) AS total_quantity_sold,
+             SUM(oi.quantity * oi.unit_price) AS total_revenue
+         FROM order_items oi
+         JOIN products p ON p.id = oi.product_id
+         GROUP BY p.id, p.name
+         ORDER BY total_revenue DESC
+         LIMIT 5
+     """)
 
-#     rows = db.execute(sql).mappings().all()
-#     return rows
+     rows = db.execute(sql).mappings().all()
+     return rows
