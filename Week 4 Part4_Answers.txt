@@ -1,0 +1,9 @@
+Transactions help protect the database by ensuring that all steps in an order creation process are executed as a single unit. 
+If any step fails, the entire transaction is rolled back, preventing partial updates and maintaining data consistency
+even when many users submit orders at the same time.
+Connection pooling allows the system to efficiently reuse a limited number of database connections instead of
+creating a new connection for each user request. This improves performance and scalability by reducing overhead and ensuring
+that the database can handle many simultaneous users without being overwhelmed.
+Without transactions and connection pooling, the system could suffer from data inconsistencies, such as overselling products or incomplete 
+orders due to partial failures. Additionally, the database could become overloaded with too many connection requests,
+leading to slow performance or system crashes under high traffic.
