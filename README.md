@@ -103,7 +103,7 @@ pip install pymysql
 Start the FastAPI server with:
 
 ```
-uvicorn main:app --reload
+uvicorn main:app --reload 
 ```
 
 ### Optional: Freeze Dependencies
