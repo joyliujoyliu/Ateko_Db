@@ -1,0 +1,9 @@
+ READ UNCOMMITTED is dangerous in an e-commerce system because it allows transactions to read uncommitted data from other transactions.
+This can result in dirty reads, where a transaction uses data that may later be rolled back, leading to incorrect decisions such as
+approving orders based on invalid stock values.
+REPEATABLE READ helps prevent non-repeatable reads, where the same query returns different results within the same transaction. 
+It ensures that once a row is read, its values cannot change during the transaction, providing more consistent and reliable data for
+operations like order processing.
+SERIALIZABLE provides the strongest safety by ensuring that transactions behave as if they were executed one after another,
+completely eliminating concurrency anomalies. However, this strict control can reduce system performance because it increases 
+locking and waiting time, limiting how many transactions can run concurrently.
