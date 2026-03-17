@@ -1,0 +1,6 @@
+ If both requests execute concurrently, the system may oversell inventory by allowing both orders to succeed using the same initial stock value.
+For example, a product with stock 5 could incorrectly process orders totaling more than 5 units.
+This problem is a race condition, which can lead to a lost update issue where concurrent operations overwrite each other’s changes.
+This issue occurs in the Week 3 implementation because there is no transaction management or locking.
+Each request reads and updates the database independently, without ensuring that the operations are isolated or atomic. 
+As a result, multiple requests can validate and modify the same data at the same time, leading to inconsistent results.
